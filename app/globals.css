@@ -2,26 +2,493 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== GOOGLE FONTS ===== */
+/* Loaded via next/font/google in lib/fonts.ts */
+
+/* ===== CSS DESIGN TOKENS ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white: #ffffff;
+  --off-white: #f2f2f2;
+  --grey-100: #e8e8e8;
+  --grey-200: #d4d4d4;
+  --grey-300: #c8c8c8;
+  --grey-400: #ababab;
+  --grey-500: #8e8e8e;
+  --grey-700: #5a5a5a;
+  --grey-900: #2a2a2a;
+  --gold: #b8b7b5;
+  --gold-light: #d0cfce;
+  --gold-dark: #888787;
+  --light-bg: #ededee;
+  --serif: var(--font-cormorant), Georgia, serif;
+  --sans: var(--font-jost), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ===== GLOBAL RESETS ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
+  background: var(--white);
+  color: var(--grey-900);
+  overflow-x: hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* ===== NAV ===== */
+nav.nav-transparent {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%);
+}
+
+nav.nav-solid {
+  background: var(--white);
+  box-shadow: 0 1px 0 var(--grey-200);
+}
+
+nav.nav-solid .nav-logo-text {
+  color: var(--grey-900);
+}
+
+nav.nav-solid .nav-link {
+  color: var(--grey-700);
+}
+
+nav.nav-solid .nav-cta-btn {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+nav.nav-transparent .nav-logo-text {
+  color: var(--white);
+}
+
+nav.nav-transparent .nav-link {
+  color: rgba(255,255,255,0.85);
+}
+
+nav.nav-transparent .nav-cta-btn {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.5);
+}
+
+/* ===== MARQUEE ANIMATION ===== */
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marqueeScroll 22s linear infinite;
+}
+
+/* ===== HERO HEADLINE ANIMATION ===== */
+.hero-headline {
+  position: absolute;
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.5vw, 48px);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--white);
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.hero-headline.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-headline em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+/* ===== HERO SLIDE ===== */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
+}
+
+.hero-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+/* ===== HERO EYEBROW ===== */
+.hero-eyebrow::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 16px;
+}
+
+/* ===== SECTION TAG ===== */
+.section-tag::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--gold);
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+/* ===== MAP TILES ===== */
+.map-tiles-dark {
+  filter: brightness(0.68) contrast(1.1) saturate(0.8);
+}
+
+/* ===== LEAFLET OVERRIDES ===== */
+.leaflet-container {
+  background: #1a2a3a;
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== PIN PULSE ANIMATION ===== */
+@keyframes pinPulse {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50% { transform: scale(1.5); opacity: 0.08; }
+}
+
+/* ===== GALLERY GRID ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 280px 280px;
+  gap: 4px;
+}
+
+.gallery-grid .gallery-item:first-child {
+  grid-row: span 2;
+}
+
+@media (max-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  .gallery-grid .gallery-item:first-child {
+    grid-row: span 1;
   }
 }
+
+/* ===== SEARCH BAR ===== */
+.search-field-select {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--grey-900);
+  cursor: pointer;
+  outline: none;
+  padding-right: 20px;
+  width: 100%;
+}
+
+/* Search tab strip */
+.search-tab-btn {
+  transition: color 0.25s, border-color 0.25s;
+}
+.search-tab-btn:hover {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+
+/* ===== FORM INPUTS ===== */
+.form-input {
+  background: var(--white);
+  border: 1px solid var(--grey-200);
+  color: var(--grey-900);
+  padding: 14px 18px;
+  font-size: 14px;
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+}
+
+.form-input:focus {
+  border-color: var(--gold);
+}
+
+.form-input::placeholder {
+  color: var(--grey-300);
+}
+
+select.form-input option {
+  background: var(--white);
+}
+
+/* ===== GLOBAL HOVER HELPERS (usable in server components) ===== */
+.gold-btn-hover:hover { background: var(--gold-dark) !important; }
+.gold-link-hover:hover { color: var(--gold-dark) !important; }
+
+/* PropertyCard hover effects */
+.prop-card-outer:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.09); transform: translateY(-4px); }
+.prop-card-outer:hover .prop-img-zoom { transform: scale(1.06) !important; }
+.prop-card { background: var(--white); overflow: hidden; transition: box-shadow 0.3s, transform 0.3s; cursor: pointer; }
+.prop-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.09); transform: translateY(-4px); }
+.prop-card:hover .prop-img-zoom { transform: scale(1.06) !important; }
+
+/* AmenityCard hover effects */
+.amenity-card:hover { background: rgba(184,183,181,0.1) !important; }
+.amenity-card:hover .amenity-icon-inner { border-color: var(--grey-700) !important; }
+
+/* Footer link hover */
+.footer-link-hover:hover { color: var(--gold-light) !important; }
+.social-icon-hover:hover { border-color: var(--gold) !important; color: var(--gold) !important; }
+
+/* ===== RESPONSIVE GRIDS (server-safe) ===== */
+
+/* Featured development grid */
+.featured-resp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 60px;
+  border: 1px solid var(--grey-200);
+}
+@media (max-width: 1024px) {
+  .featured-resp-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Properties grid — clean gap layout, no empty grey cells */
+.props-resp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: transparent;
+  margin-top: 0;
+}
+.props-resp-grid > * {
+  background: var(--white);
+}
+@media (max-width: 1024px) {
+  .props-resp-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .props-resp-grid { grid-template-columns: 1fr; }
+}
+
+/* Amenities grid (4 -> 2 col) */
+.amenities-resp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  margin-top: 60px;
+}
+@media (max-width: 1024px) {
+  .amenities-resp-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .amenities-resp-grid { grid-template-columns: 1fr; }
+}
+
+/* Rooms gallery grid */
+.rooms-resp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 40px;
+}
+@media (max-width: 640px) {
+  .rooms-resp-grid { grid-template-columns: 1fr; }
+}
+
+/* Register grid */
+.register-resp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .register-resp-grid { grid-template-columns: 1fr; gap: 60px; }
+}
+
+/* 2-col generic grid */
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .two-col-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* Footer grid */
+.footer-resp-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+@media (max-width: 1024px) {
+  .footer-resp-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .footer-resp-grid { grid-template-columns: 1fr; }
+}
+
+/* Offices grid */
+.offices-resp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+}
+@media (max-width: 768px) {
+  .offices-resp-grid { grid-template-columns: 1fr; }
+}
+
+/* Floor plan row */
+.plan-resp-row {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  background: var(--white);
+  align-items: stretch;
+  transition: background 0.2s;
+}
+.plan-resp-row:hover { background: var(--off-white) !important; }
+@media (max-width: 1024px) {
+  .plan-resp-row { grid-template-columns: 1fr; }
+}
+
+/* CTA bottom wrap */
+.bottom-cta-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .bottom-cta-flex { flex-direction: column; gap: 24px; align-items: flex-start; }
+}
+
+/* Rooms CTA wrap */
+.rooms-cta-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 640px) {
+  .rooms-cta-flex { flex-direction: column; gap: 20px; align-items: flex-start; }
+}
+
+/* Intro two-col grid */
+.amenity-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .amenity-intro-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* Nav responsive */
+@media (max-width: 1024px) {
+  nav { padding: 0 30px !important; }
+  .nav-links-desktop { display: none; }
+}
+
+/* Section responsive padding */
+@media (max-width: 1024px) {
+  .section-pad { padding: 70px 30px !important; }
+  .section-pad-gallery { padding: 70px 0 !important; }
+  .gallery-header-pad { padding: 0 30px !important; }
+}
+
+/* Image hover zoom on room items */
+.room-item:hover .room-img-inner { transform: scale(1.04) !important; }
+.gallery-item-hover:hover .gallery-img-inner { transform: scale(1.05) !important; }
+
+/* Featured image hover */
+.featured-img-wrap:hover .featured-img-inner { transform: scale(1.04) !important; }
+
+/* ===== REGISTER PAGE ===== */
+@media (max-width: 1024px) {
+  .register-benefits-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 640px) {
+  .register-benefits-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ===== PROPERTIES PAGE NAV ===== */
+.prop-section-nav-link:hover {
+  color: var(--gold) !important;
+  border-bottom-color: var(--gold) !important;
+}
+
+/* ===== SERVICE PAGES ===== */
+@media (max-width: 1024px) {
+  .svc-feature-grid { grid-template-columns: 1fr 1fr !important; }
+  .svc-plans-grid { grid-template-columns: 1fr !important; }
+  .leasing-split-grid { grid-template-columns: 1fr !important; }
+  .leasing-steps-grid { grid-template-columns: 1fr 1fr !important; }
+  .val-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .val-types-grid { grid-template-columns: 1fr !important; }
+  .val-process-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 640px) {
+  .svc-feature-grid { grid-template-columns: 1fr !important; }
+  .leasing-steps-grid { grid-template-columns: 1fr !important; }
+  .val-stats-grid { grid-template-columns: 1fr !important; }
+  .val-process-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ===== PROPERTY DETAIL PAGE ===== */
+@media (max-width: 1024px) {
+  .property-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+}
+@media (max-width: 640px) {
+  .property-gallery-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ===== ARTICLE DETAIL PAGE ===== */
+@media (max-width: 1024px) {
+  .article-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 50px !important;
+  }
+}
+
