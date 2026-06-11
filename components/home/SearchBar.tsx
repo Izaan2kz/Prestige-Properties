@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 const residentialTypes = ['All Types', 'Apartment', 'Villa', 'Penthouse', 'Townhouse']
@@ -24,7 +23,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ propertyType }: SearchBarProps) {
-  const router = useRouter()
+
   const [location, setLocation] = useState('All Locations')
   const [type,     setType]     = useState('All Types')
   const [bedroom,  setBedroom]  = useState('Any')
