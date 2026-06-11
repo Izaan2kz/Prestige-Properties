@@ -40,29 +40,47 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
 // ── Content Security Policy directives ───────────────────────────────────────
+// NOTE: next/font/google self-hosts all fonts at build time — no runtime
+// requests to fonts.googleapis.com or fonts.gstatic.com are ever made.
 const CSP_DIRECTIVES = [
-  // Only load scripts from same origin and Next.js inline scripts (nonce not yet used)
+  // Default fallback: same origin only
   `default-src 'self'`,
-  // Scripts: same origin + Vercel speed insights if added later
+
+  // Scripts: Next.js requires unsafe-inline (for hydration) and unsafe-eval (for dev HMR)
   `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
-  // Styles: same origin + Google Fonts + inline styles (required by Next.js)
-  `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
-  // Images: same origin + Unsplash (property photos) + data URIs (favicons)
-  // Carto CDN tile servers a/b/c/d are used by Leaflet for map tile images
-  `img-src 'self' data: https://images.unsplash.com https://*.basemaps.cartocdn.com`,
-  // Fonts: same origin + Google Fonts CDN
-  `font-src 'self' https://fonts.gstatic.com`,
-  // Map tiles: Carto CDN used by Leaflet map
-  `connect-src 'self' https://*.supabase.co https://a.basemaps.cartocdn.com https://b.basemaps.cartocdn.com https://c.basemaps.cartocdn.com https://d.basemaps.cartocdn.com`,
-  // Tile images for Leaflet
+
+  // Styles: same origin + inline (required by Next.js styled components / global CSS)
+  `style-src 'self' 'unsafe-inline'`,
+
+  // Images:
+  //   - 'self'                        → Next.js optimised images (_next/image)
+  //   - data:                          → inline base64 images / favicons
+  //   - blob:                          → Leaflet uses blob URLs internally for markers
+  //   - https://images.unsplash.com   → property photos from Supabase storage
+  //   - https://*.basemaps.cartocdn.com → Leaflet map tiles (a/b/c/d subdomains)
+  `img-src 'self' data: blob: https://images.unsplash.com https://*.basemaps.cartocdn.com`,
+
+  // Fonts: self-hosted only (next/font downloads Google Fonts at build time)
+  `font-src 'self'`,
+
+  // Fetch / XHR / WebSocket:
+  //   - 'self'                   → Next.js API routes (/api/contact etc.)
+  //   - https://*.supabase.co    → Supabase client reads (HeroMap, SearchBar)
+  `connect-src 'self' https://*.supabase.co`,
+
+  // Web workers (used internally by some Leaflet plugins)
   `worker-src blob:`,
-  // No frames allowed at all (defence in depth alongside X-Frame-Options)
+
+  // No external frames allowed
   `frame-src 'none'`,
-  // Disallow embedding this page in frames on other origins
+
+  // This page cannot be embedded in an iframe on any other origin
   `frame-ancestors 'none'`,
-  // Only submit forms to same origin
+
+  // Form submissions only to same origin
   `form-action 'self'`,
-  // Block mixed content
+
+  // Upgrade any accidental http:// requests to https://
   `upgrade-insecure-requests`,
 ].join('; ')
 
