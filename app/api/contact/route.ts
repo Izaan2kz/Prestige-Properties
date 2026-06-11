@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// Server-only client using the service role key — bypasses RLS entirely.
-// SUPABASE_SERVICE_ROLE_KEY is never sent to the browser (no NEXT_PUBLIC_ prefix).
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 interface ContactPayload {
   firstName: string
   lastName: string
@@ -24,6 +17,21 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_REGEX = /^\+?[\d\s\-().]{7,20}$/
 
 export async function POST(request: NextRequest) {
+  // ── Guard: ensure env vars are present at runtime ─────────────────────────
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !serviceKey) {
+    console.error('Missing Supabase environment variables')
+    return NextResponse.json(
+      { success: false, error: 'Server configuration error.' },
+      { status: 500 }
+    )
+  }
+
+  // Server-only admin client created at request time (bypasses RLS entirely)
+  const supabaseAdmin = createClient(supabaseUrl, serviceKey)
+
   try {
     const body: ContactPayload = await request.json()
 
