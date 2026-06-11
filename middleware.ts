@@ -48,7 +48,8 @@ const CSP_DIRECTIVES = [
   // Styles: same origin + Google Fonts + inline styles (required by Next.js)
   `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
   // Images: same origin + Unsplash (property photos) + data URIs (favicons)
-  `img-src 'self' data: https://images.unsplash.com`,
+  // Carto CDN tile servers a/b/c/d are used by Leaflet for map tile images
+  `img-src 'self' data: https://images.unsplash.com https://*.basemaps.cartocdn.com`,
   // Fonts: same origin + Google Fonts CDN
   `font-src 'self' https://fonts.gstatic.com`,
   // Map tiles: Carto CDN used by Leaflet map
