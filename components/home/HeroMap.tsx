@@ -90,8 +90,8 @@ export default function HeroMap() {
       })
       leafletRef.current = map
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        subdomains: 'abc',
         maxZoom: 19,
         className: 'map-tiles-dark',
       }).addTo(map)
