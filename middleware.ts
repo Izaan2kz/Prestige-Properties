@@ -57,8 +57,8 @@ const CSP_DIRECTIVES = [
   //   - data:                          → inline base64 images / favicons
   //   - blob:                          → Leaflet uses blob URLs internally for markers
   //   - https://images.unsplash.com   → property photos from Supabase storage
-  //   - https://*.basemaps.cartocdn.com → Leaflet map tiles (a/b/c/d subdomains)
-  `img-src 'self' data: blob: https://images.unsplash.com https://*.basemaps.cartocdn.com`,
+  //   - https://*.tile.openstreetmap.org → Leaflet map tiles (a/b/c subdomains)
+  `img-src 'self' data: blob: https://images.unsplash.com https://*.tile.openstreetmap.org`,
 
   // Fonts: self-hosted only (next/font downloads Google Fonts at build time)
   `font-src 'self'`,
