@@ -162,6 +162,13 @@ nav.nav-transparent .nav-cta-btn {
   background: #1a2a3a;
 }
 
+/* Fix white seam lines between tiles caused by subpixel rendering with CSS filters */
+.leaflet-tile {
+  outline: 1px solid transparent;
+  margin: -1px;
+  padding: 1px;
+}
+
 /* ===== SCROLL REVEAL ===== */
 .reveal {
   opacity: 0;

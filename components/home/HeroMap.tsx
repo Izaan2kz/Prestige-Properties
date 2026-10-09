@@ -90,11 +90,13 @@ export default function HeroMap() {
       })
       leafletRef.current = map
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        subdomains: 'abc',
-        maxZoom: 19,
+      const stadiaKey = process.env.NEXT_PUBLIC_STADIA_API_KEY
+      L.tileLayer(`https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${stadiaKey}`, {
+        maxZoom: 20,
         className: 'map-tiles-dark',
       }).addTo(map)
+
+
     }
 
     initMap()
